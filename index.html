@@ -800,15 +800,23 @@ function animateCount(el) {
   requestAnimationFrame(tick);
 }
 
+const counted = new Set();
 const cio = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting && e.target.dataset.target) {
+    if (e.isIntersecting && e.target.dataset.target && !counted.has(e.target)) {
+      counted.add(e.target);
       animateCount(e.target);
       cio.unobserve(e.target);
     }
   });
-}, { threshold: 0.5 });
+}, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
 document.querySelectorAll('[data-target]').forEach(el => cio.observe(el));
+// Fallback: trigger any counters still at 0 after 800ms
+setTimeout(() => {
+  document.querySelectorAll('[data-target]').forEach(el => {
+    if (!counted.has(el)) { counted.add(el); animateCount(el); }
+  });
+}, 800);
 </script>
 
 </body>
