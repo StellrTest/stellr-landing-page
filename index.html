@@ -46,7 +46,7 @@ a{text-decoration:none}
 #banner a{color:#00A8E8;text-decoration:underline;margin-left:8px}
 
 /* ── NAV ── */
-nav{position:fixed;top:30px;left:0;right:0;z-index:1000;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;transition:all .3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;transition:background .3s,box-shadow .3s}
 nav.on{background:rgba(255,255,255,0.92);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 20px rgba(0,0,0,0.07)}
 .logo img{height:52px;width:auto;display:block}
 .nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#fff;font-weight:700;font-size:14px;padding:10px 22px;border-radius:var(--r-pill);box-shadow:0 4px 16px rgba(0,168,232,.3);transition:transform .2s,box-shadow .2s}
@@ -736,6 +736,13 @@ footer a:hover{color:#00A8E8}
 <a href="#booking" class="btn float-cta">Book Free Strategy Call →</a>
 
 <script>
+// ── Nav flush below banner
+const banner = document.getElementById('banner');
+const navEl = document.getElementById('nav');
+function setNavTop(){ navEl.style.top = banner.offsetHeight + 'px'; }
+setNavTop();
+window.addEventListener('resize', setNavTop);
+
 // ── Scroll progress bar
 const prog = document.getElementById('progress');
 window.addEventListener('scroll', () => {
