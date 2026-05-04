@@ -4,26 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-file static landing page (`index.html`) for Stellr Media — a real estate agent marketing service. Conversion-optimized sales funnel targeting real estate agents via paid ads. Primary above-the-fold element is a VSL (video sales letter); conversion goal is a Calendly strategy call booking.
+Static landing page for Stellr Media — a done-for-you digital marketing service for real estate agents. Conversion-optimized sales funnel driven by paid ads. Primary above-the-fold element is a VSL (video sales letter); conversion goal is a GHL strategy call booking.
 
 Deployed to GitHub Pages: `https://stellrtest.github.io/stellr-landing-page/`
 
 ## Local Development
 
-No build system. Serve the file directly:
+No build system. Serve files directly:
 
 ```bash
 python3 -m http.server 8080
 # then open http://localhost:8080
 ```
 
+## Files
+
+- `index.html` — the entire landing page (inline CSS + HTML + JS)
+- `privacy.html` — Privacy Policy page
+- `terms.html` — Terms of Service page
+- `logo.png` — Stellr serif wordmark (black on white square PNG, no transparency); referenced as `<img src="logo.png">` inside `.logo a` in the nav; inverted to white in the footer via `filter:brightness(0) invert(1)`
+
 ## Architecture
 
-Everything lives in `index.html` — inline CSS (`<style>`), HTML, and inline JavaScript (`<script>`). The only external dependency is Google Fonts (Inter) via CDN.
+Everything in `index.html` is inline — `<style>`, HTML, and `<script>`. No build step, no bundler, no framework. The only external dependencies are Google Fonts (Inter) via CDN and the GHL calendar embed script.
 
-**Page sections in order:** scroll-progress bar → urgency banner → sticky nav → hero (VSL) → stats bar → pain points → solution/services → case studies → how it works → testimonials → guarantee → FAQ → booking (Calendly) → footer → floating CTA button.
-
-Assets: `logo.png` — the Stellr serif wordmark (black on white square PNG, no transparency). Referenced as `<img src="logo.png">` inside `.logo a` in the nav.
+**Page sections in order:** scroll-progress bar → urgency banner → sticky nav → hero (VSL + market checker) → testimonials + screenshot placeholders → stats bar → pain points → solution/services → case studies → how it works → guarantee → FAQ → booking (scarcity bar + GHL calendar) → footer → floating CTA button.
 
 ## Design System
 
@@ -34,34 +39,52 @@ Assets: `logo.png` — the Stellr serif wordmark (black on white square PNG, no 
 - **Typography:** Inter, headings `font-weight:900; letter-spacing:-0.03em`
 - **Dark surfaces** (VSL cover, footer): navy `#0A1628` / `#060E1A`
 
-CSS variables are defined in `:root` — always use them rather than hardcoding values: `--accent`, `--accent-dark`, `--grad`, `--glass`, `--glass-border`, `--blur`, `--shadow`, `--shadow-lg`, `--r-pill`, `--r-card`.
+CSS variables in `:root` — always use them, never hardcode: `--accent`, `--accent-dark`, `--grad`, `--glass`, `--glass-border`, `--blur`, `--shadow`, `--shadow-lg`, `--r-pill`, `--r-card`.
 
 ## Animations & Interactions
 
-**Fade-up (`.fu` class):** Elements start hidden (`opacity:0; transform:translateY(28px)`) and animate in when an `IntersectionObserver` (threshold `0.1`) fires, adding the `.vis` class. Stagger delay applied via `setTimeout(fn, i * 70)`.
+**Fade-up (`.fu` class):** Elements start hidden (`opacity:0; transform:translateY(28px)`) and animate in when an `IntersectionObserver` (threshold `0.1`) fires, adding `.vis`. Stagger delay via `setTimeout(fn, i * 70)`.
 
-**Counter animation:** Stat numbers use `data-target`, `data-prefix`, `data-suffix`, `data-decimal` attributes. A separate `IntersectionObserver` (threshold `0.5`) triggers `animateCount()` on each element when scrolled into view. The animation runs over 1600ms with cubic ease-out.
+**Counter animation:** Stat numbers use `data-target`, `data-prefix`, `data-suffix`, `data-decimal` attributes. A separate `IntersectionObserver` (threshold `0.5`) triggers `animateCount()` when scrolled into view. 1600ms cubic ease-out.
 
-**Nav positioning:** The nav `top` is set dynamically via JS (`setNavTop()`) to `banner.offsetHeight` on load and on `resize`. This prevents the fixed nav from overlapping the urgency banner, which wraps to two lines on mobile. CSS sets `top:0` as the default; JS overrides it.
+**Nav positioning:** `setNavTop()` sets nav `top` to `banner.offsetHeight` on load and `resize`, preventing the fixed nav from overlapping the urgency banner on mobile where it wraps to two lines.
 
-**Sticky nav background:** Adds class `.on` (frosted glass background) when `scrollY > 60`.
+**Sticky nav background:** Adds `.on` (frosted glass) when `scrollY > 60`.
 
-**VSL click-to-play:** Clicking the cover sets `iframe.src` to the YouTube embed URL with `?autoplay=1`. Replace `VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` with the real video ID before going live.
+**VSL click-to-play + post-roll:** Clicking the cover sets `iframe.src` with `?autoplay=1&enablejsapi=1`. A `window.message` listener watches for YouTube `onStateChange` event with `info:0` (ended) — when fired, shows `.vsl-end` overlay and auto-scrolls to `#booking` after 2.8s. Replace `VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` before going live.
+
+**Market availability checker:** Input in the hero lets visitors enter a city/zip. `checkMarket()` always returns a green "available" result after a 0.9s fake-check delay. Enter key supported.
+
+**Scarcity bar:** `.scarcity-fill` animates to 73% width when scrolled into view via its own `IntersectionObserver`.
 
 ## Mobile
 
-Primary traffic is mobile (ads). Key mobile rules:
-- `body { max-width:100vw; overflow-x:hidden }` — prevents horizontal scroll from any overflowing child
+Primary traffic is mobile (paid ads). Key rules:
+- `body { max-width:100vw; overflow-x:hidden }` — prevents horizontal scroll
 - `.logo img { height:40px }` at `@media(max-width:768px)`
-- `.cal-zone code { word-break:break-all; overflow-wrap:break-word; white-space:normal }` — prevents the long Calendly URL from causing horizontal overflow
+- Section padding: `72px` desktop → `56px` tablet → `48px` mobile
 
-## Placeholder Replacements Before Go-Live
+## GHL Calendar Embed
 
-1. **VSL video:** `const VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` in the script block
-2. **Calendly widget:** Replace the `.cal-zone` div with the Calendly inline embed snippet:
-   ```html
-   <div class="calendly-inline-widget"
-        data-url="https://calendly.com/YOUR_USERNAME/strategy-call"
-        style="min-width:320px;height:700px;"></div>
-   <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-   ```
+The booking section uses a live GoHighLevel calendar iframe:
+```html
+<iframe src="https://link.stellrmedia.com/widget/booking/kfFLUoVZZRwKFwkiCyZO"
+        style="width:100%;min-height:700px;border:none;overflow:hidden"
+        scrolling="no" id="2frEogycf0JcnEwgbcWe_1777927548215"></iframe>
+<script src="https://link.stellrmedia.com/js/form_embed.js" type="text/javascript"></script>
+```
+To update the calendar, replace the `src` URL and `id` attribute with the new embed values from GHL.
+
+## Screenshot Placeholders
+
+The testimonials section has three `.shot-card` elements with `.shot-ph` placeholder divs. To replace with a real screenshot:
+```html
+<!-- Before -->
+<div class="shot-ph">...</div>
+<!-- After -->
+<img src="screenshot1.png" alt="Client result">
+```
+
+## Remaining Placeholder Before Go-Live
+
+- **VSL video:** `const VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` in the script block
