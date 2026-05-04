@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Single-file static landing page (`index.html`) for Stellr Media — a real estate agent marketing service. The page is a conversion-optimized sales funnel targeting real estate agents via paid ads, with a VSL (video sales letter) as the primary above-the-fold element and a Calendly booking widget as the conversion goal.
+Single-file static landing page (`index.html`) for Stellr Media — a real estate agent marketing service. Conversion-optimized sales funnel targeting real estate agents via paid ads. Primary above-the-fold element is a VSL (video sales letter); conversion goal is a Calendly strategy call booking.
+
+Deployed to GitHub Pages: `https://stellrtest.github.io/stellr-landing-page/`
 
 ## Local Development
 
@@ -17,37 +19,49 @@ python3 -m http.server 8080
 
 ## Architecture
 
-Everything lives in `index.html` — inline CSS (`<style>`), HTML, and inline JavaScript (`<script>`). There are no external dependencies beyond Google Fonts (Inter) loaded via CDN.
+Everything lives in `index.html` — inline CSS (`<style>`), HTML, and inline JavaScript (`<script>`). The only external dependency is Google Fonts (Inter) via CDN.
 
-**Page sections in order:** urgency banner → sticky nav → hero (VSL) → stats bar → pain points → solution/services → case studies → how it works → testimonials → guarantee → FAQ → booking (Calendly) → footer.
+**Page sections in order:** scroll-progress bar → urgency banner → sticky nav → hero (VSL) → stats bar → pain points → solution/services → case studies → how it works → testimonials → guarantee → FAQ → booking (Calendly) → footer → floating CTA button.
+
+Assets: `logo.png` — the Stellr serif wordmark (black on white square PNG, no transparency). Referenced as `<img src="logo.png">` inside `.logo a` in the nav.
 
 ## Design System
 
-The design system is defined in `SKILL.md` (module index) with individual `.md` files for each component. **Read the relevant SKILL.md modules before making any visual changes.**
+- **Backgrounds:** sections alternate between `linear-gradient(160deg,#FFFFFF 0%,#F4F6F8 100%)` and the reverse
+- **Accent color:** `#00A8E8` exclusively; secondary shade `#0086C0`; gradient `linear-gradient(135deg,#00A8E8,#0086C0)`
+- **Glassmorphism cards:** `background:rgba(255,255,255,0.75)` + `backdrop-filter:blur(24px)` + `border:1px solid rgba(255,255,255,0.9)` — applied via `.card` class and directly on the VSL box
+- **Buttons:** pill-shaped (`border-radius:9999px`), accent gradient fill, glint shimmer on hover via `::after` pseudo-element
+- **Typography:** Inter, headings `font-weight:900; letter-spacing:-0.03em`
+- **Dark surfaces** (VSL cover, footer): navy `#0A1628` / `#060E1A`
 
-Key rules enforced by the design system:
-- **Backgrounds:** monochrome white/light-gray gradients — sections alternate between `linear-gradient(160deg,#FFFFFF 0%,#F4F6F8 100%)` and the reverse. Never flat single colors.
-- **Accent color:** `#00A8E8` exclusively — used for buttons, eyebrows, gradient text, icons, borders, checkmarks, the progress bar. Secondary shade `#0086C0`.
-- **Glassmorphism:** all cards use `background:rgba(255,255,255,0.75)` + `backdrop-filter:blur(24px)` + `border:1px solid rgba(255,255,255,0.9)`.
-- **Buttons:** pill-shaped (`border-radius:9999px`), gradient fill `linear-gradient(135deg,#00A8E8,#0086C0)`, glint shimmer on hover via `::after` pseudo-element.
-- **Typography:** Inter font, headings use `font-weight:900; letter-spacing:-0.03em`.
-- **Dark surfaces** (VSL cover, footer): navy `#0A1628` / `#060E1A` — not pure black, not purple.
+CSS variables are defined in `:root` — always use them rather than hardcoding values: `--accent`, `--accent-dark`, `--grad`, `--glass`, `--glass-border`, `--blur`, `--shadow`, `--shadow-lg`, `--r-pill`, `--r-card`.
 
-## Placeholder Replacements
+## Animations & Interactions
 
-Two things must be swapped before the page goes live:
+**Fade-up (`.fu` class):** Elements start hidden (`opacity:0; transform:translateY(28px)`) and animate in when an `IntersectionObserver` (threshold `0.1`) fires, adding the `.vis` class. Stagger delay applied via `setTimeout(fn, i * 70)`.
 
-1. **VSL video** — find `const VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` in the script block and replace with the actual YouTube video ID.
-2. **Calendly booking widget** — replace the `.cal-zone` div with the Calendly inline embed snippet:
+**Counter animation:** Stat numbers use `data-target`, `data-prefix`, `data-suffix`, `data-decimal` attributes. A separate `IntersectionObserver` (threshold `0.5`) triggers `animateCount()` on each element when scrolled into view. The animation runs over 1600ms with cubic ease-out.
+
+**Nav positioning:** The nav `top` is set dynamically via JS (`setNavTop()`) to `banner.offsetHeight` on load and on `resize`. This prevents the fixed nav from overlapping the urgency banner, which wraps to two lines on mobile. CSS sets `top:0` as the default; JS overrides it.
+
+**Sticky nav background:** Adds class `.on` (frosted glass background) when `scrollY > 60`.
+
+**VSL click-to-play:** Clicking the cover sets `iframe.src` to the YouTube embed URL with `?autoplay=1`. Replace `VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` with the real video ID before going live.
+
+## Mobile
+
+Primary traffic is mobile (ads). Key mobile rules:
+- `body { max-width:100vw; overflow-x:hidden }` — prevents horizontal scroll from any overflowing child
+- `.logo img { height:40px }` at `@media(max-width:768px)`
+- `.cal-zone code { word-break:break-all; overflow-wrap:break-word; white-space:normal }` — prevents the long Calendly URL from causing horizontal overflow
+
+## Placeholder Replacements Before Go-Live
+
+1. **VSL video:** `const VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID'` in the script block
+2. **Calendly widget:** Replace the `.cal-zone` div with the Calendly inline embed snippet:
    ```html
    <div class="calendly-inline-widget"
         data-url="https://calendly.com/YOUR_USERNAME/strategy-call"
         style="min-width:320px;height:700px;"></div>
    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
    ```
-
-## CSS Conventions
-
-CSS variables are defined in `:root` — always use them rather than hardcoding color values. The key variables: `--accent`, `--accent-dark`, `--grad`, `--glass`, `--glass-border`, `--blur`, `--shadow`, `--shadow-lg`, `--r-pill`, `--r-card`.
-
-Fade-in animations use the `.fu` class (opacity:0 + translateY) toggled to `.fu.vis` via IntersectionObserver. Counter animations on stat numbers are driven by `data-target`, `data-prefix`, `data-suffix`, and `data-decimal` attributes.

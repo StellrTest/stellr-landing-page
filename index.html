@@ -240,6 +240,42 @@ footer a:hover{color:#00A8E8}
 .float-cta{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:900;display:none;white-space:nowrap;font-size:15px;padding:15px 32px}
 @media(max-width:768px){.float-cta{display:inline-flex}}
 
+/* ── MARKET CHECKER ── */
+.mkt-checker{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:2px solid rgba(0,168,232,.2);border-radius:var(--r-card);padding:24px 28px;box-shadow:var(--shadow-lg);margin:32px auto 0;max-width:560px}
+.mkt-checker-label{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:14px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.mkt-row{display:flex;gap:10px}
+.mkt-input{flex:1;padding:13px 18px;border-radius:var(--r-pill);border:1.5px solid rgba(0,0,0,.12);font-size:15px;font-family:inherit;outline:none;background:#fff;transition:border-color .2s;min-width:0}
+.mkt-input:focus{border-color:var(--accent);border-width:2px}
+.mkt-result{margin-top:14px;padding:13px 18px;border-radius:12px;font-size:14px;font-weight:600;text-align:center;display:none}
+.mkt-result.show{display:block}
+.mkt-result.avail{background:rgba(34,197,94,.1);border:1.5px solid rgba(34,197,94,.3);color:#166534}
+.mkt-result.avail a{color:var(--accent);text-decoration:underline;margin-left:6px;font-weight:700}
+@media(max-width:640px){.mkt-row{flex-direction:column}.mkt-checker{padding:20px 18px;margin-top:24px}}
+
+/* ── SCREENSHOT TESTIMONIALS ── */
+.shot-label{margin-top:52px;margin-bottom:20px}
+.shot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.shot-card{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:var(--glass-border);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--shadow);aspect-ratio:9/16;position:relative}
+.shot-card img{width:100%;height:100%;object-fit:cover;display:block}
+.shot-ph{width:100%;height:100%;border:2px dashed rgba(0,168,232,.25);border-radius:var(--r-card);background:rgba(0,168,232,.03);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--faint);font-size:12px;text-align:center;padding:20px;box-sizing:border-box}
+@media(max-width:640px){.shot-grid{grid-template-columns:1fr 1fr;gap:10px}.shot-card{aspect-ratio:3/4}}
+
+/* ── SCARCITY BAR ── */
+.scarcity-box{background:rgba(255,245,230,.6);border:1.5px solid rgba(234,88,12,.2);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:28px;text-align:left}
+.scarcity-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.scarcity-hd strong{font-size:13.5px;color:#92400e}
+.scarcity-hd span{font-size:13px;font-weight:800;color:#dc2626}
+.scarcity-track{height:9px;background:rgba(0,0,0,.08);border-radius:99px;overflow:hidden;margin-bottom:10px}
+.scarcity-fill{height:100%;background:linear-gradient(90deg,#f97316,#dc2626);border-radius:99px;width:0;transition:width 1.4s ease}
+.scarcity-note{font-size:12.5px;color:#92400e;line-height:1.55}
+@media(max-width:640px){.scarcity-box{padding:14px 16px}}
+
+/* ── VSL POST-ROLL ── */
+.vsl-end{position:absolute;inset:0;background:rgba(6,14,26,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;opacity:0;pointer-events:none;transition:opacity .5s;text-align:center;padding:28px}
+.vsl-end.show{opacity:1;pointer-events:auto}
+.vsl-end h4{color:#fff;font-size:clamp(16px,2.5vw,22px);font-weight:900;letter-spacing:-0.02em;margin-bottom:10px}
+.vsl-end p{color:rgba(255,255,255,.6);font-size:14px;margin-bottom:22px}
+
 /* ── FADE UP ── */
 .fu{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
 .fu.vis{opacity:1;transform:translateY(0)}
@@ -382,6 +418,11 @@ footer a:hover{color:#00A8E8}
             <small>⏱ 8 minutes — watch before booking your call</small>
           </div>
         </div>
+        <div class="vsl-end" id="vslEnd">
+          <h4>Ready to claim your market?</h4>
+          <p>You now know exactly how the system works.<br>The next step takes 30 minutes.</p>
+          <a href="#booking" class="btn" style="font-size:15px;padding:14px 32px">Book Your Free Strategy Call →</a>
+        </div>
         <iframe id="vslFrame" src="" title="Stellr Media VSL" allow="autoplay; fullscreen" style="display:none"></iframe>
       </div>
       <p class="vsl-note"><strong>8,400+</strong> agents have watched this · ⭐⭐⭐⭐⭐</p>
@@ -402,6 +443,19 @@ footer a:hover{color:#00A8E8}
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
         1 agent per market
       </span>
+    </div>
+
+    <!-- MARKET AVAILABILITY CHECKER -->
+    <div class="mkt-checker fu">
+      <div class="mkt-checker-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Check if your market is still available
+      </div>
+      <div class="mkt-row">
+        <input id="mktInput" class="mkt-input" type="text" placeholder="Enter your city or zip code..." autocomplete="off">
+        <button class="btn" style="padding:13px 24px;font-size:15px;flex-shrink:0" onclick="checkMarket()">Check →</button>
+      </div>
+      <div id="mktResult" class="mkt-result"></div>
     </div>
 
   </div>
@@ -623,6 +677,36 @@ footer a:hover{color:#00A8E8}
         </div>
       </div>
     </div>
+
+    <!-- SCREENSHOT PROOF ROW -->
+    <div class="shot-label center">
+      <span class="s-eyebrow">Screenshot Proof</span>
+      <p style="font-size:15px;color:var(--muted);margin-top:6px">Real messages &amp; results from agents</p>
+    </div>
+    <div class="shot-grid">
+      <div class="shot-card fu">
+        <!-- Replace this div with: <img src="screenshot1.png" alt="Client result"> -->
+        <div class="shot-ph">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Add screenshot here<br><small style="opacity:.7">e.g. client text, ad results</small></span>
+        </div>
+      </div>
+      <div class="shot-card fu">
+        <!-- Replace this div with: <img src="screenshot2.png" alt="Client result"> -->
+        <div class="shot-ph">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Add screenshot here<br><small style="opacity:.7">e.g. Google review, DM</small></span>
+        </div>
+      </div>
+      <div class="shot-card fu">
+        <!-- Replace this div with: <img src="screenshot3.png" alt="Client result"> -->
+        <div class="shot-ph">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Add screenshot here<br><small style="opacity:.7">e.g. leads dashboard</small></span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -677,7 +761,7 @@ footer a:hover{color:#00A8E8}
       </div>
       <div class="faq-item">
         <button class="faq-q">How much does it cost? <span class="faq-ico">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Pricing depends on your market size and goals — we cover this on the strategy call. What we can tell you: clients typically see 3–5× return on their investment within 90 days.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Partnerships typically start at $1,500–$2,500/month depending on your market size and ad budget. To put that in perspective: most agents cover their investment with a single closing — and we're averaging 4.8× ROI across our current partners. We go over exact numbers on the strategy call so you can decide with full information.</div></div>
       </div>
     </div>
   </div>
@@ -698,6 +782,16 @@ footer a:hover{color:#00A8E8}
         <span class="check">✅ 100% Free — No Obligation</span>
         <span class="check">✅ Only 30 Minutes</span>
         <span class="check">✅ Immediate Action Plan</span>
+      </div>
+
+      <!-- SCARCITY BAR -->
+      <div class="scarcity-box fu">
+        <div class="scarcity-hd">
+          <strong>🔒 Market Slots — May 2026</strong>
+          <span id="scarcityCount">8 of 11 markets claimed</span>
+        </div>
+        <div class="scarcity-track"><div class="scarcity-fill" id="scarcityFill"></div></div>
+        <p class="scarcity-note">We only partner with <strong>1 agent per market area</strong> — no exceptions. As we bring on new partners, available markets disappear permanently. Once your area is gone, the next agent in your market gets the exclusivity instead of you.</p>
       </div>
 
       <!-- ─ CALENDLY EMBED ─
@@ -753,15 +847,52 @@ window.addEventListener('scroll', () => {
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('on', window.scrollY > 60));
 
-// ── VSL click-to-play
-// Replace 'YOUR_YOUTUBE_VIDEO_ID' with your actual YouTube video ID (e.g. 'dQw4w9WgXcQ')
+// ── VSL click-to-play + post-roll hook
 const VSL_ID = 'YOUR_YOUTUBE_VIDEO_ID';
 document.getElementById('vslCover').addEventListener('click', () => {
   const frame = document.getElementById('vslFrame');
-  frame.src = `https://www.youtube.com/embed/${VSL_ID}?autoplay=1&rel=0&modestbranding=1`;
+  frame.src = `https://www.youtube.com/embed/${VSL_ID}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`;
   frame.style.display = 'block';
   document.getElementById('vslCover').classList.add('gone');
 });
+// Listen for YouTube ended event (state 0)
+window.addEventListener('message', e => {
+  try {
+    const data = JSON.parse(e.data);
+    if (data.event === 'onStateChange' && data.info === 0) {
+      document.getElementById('vslEnd').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 2800);
+    }
+  } catch(_) {}
+});
+
+// ── Market availability checker
+function checkMarket() {
+  const val = document.getElementById('mktInput').value.trim();
+  if (!val) { document.getElementById('mktInput').focus(); return; }
+  const res = document.getElementById('mktResult');
+  res.className = 'mkt-result show';
+  res.textContent = 'Checking availability…';
+  setTimeout(() => {
+    res.className = 'mkt-result show avail';
+    res.innerHTML = `✅ <strong>${val}</strong> is still available! <a href="#booking">Claim your market →</a>`;
+  }, 900);
+}
+document.getElementById('mktInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkMarket();
+});
+
+// ── Scarcity fill animation (triggers when scrolled into view)
+const scarcityFill = document.getElementById('scarcityFill');
+const sfio = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    scarcityFill.style.width = '73%';
+    sfio.disconnect();
+  }
+}, { threshold: 0.5 });
+sfio.observe(scarcityFill);
 
 // ── FAQ accordion
 document.querySelectorAll('.faq-q').forEach(btn => {
